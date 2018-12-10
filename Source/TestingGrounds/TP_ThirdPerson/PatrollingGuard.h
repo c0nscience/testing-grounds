@@ -15,7 +15,7 @@ class TESTINGGROUNDS_API APatrollingGuard : public ATP_ThirdPersonCharacter
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Behavior")
+	UPROPERTY(EditInstanceOnly, Category = "Behavior")
 	TArray<AActor*> PatrolPoints = TArray<AActor*>();
 
 };
