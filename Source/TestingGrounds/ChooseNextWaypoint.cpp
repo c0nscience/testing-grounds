@@ -25,7 +25,7 @@ void UChooseNextWaypoint::GetPatrolPoints(UBehaviorTreeComponent & OwnerComp)
 
 	if (!ensure(PatrolRouteComponent)) { return; }
 
-	PatrolPoints = PatrolRouteComponent->PatrolPoints;
+	PatrolPoints = PatrolRouteComponent->GetPatrolPoints();
 }
 
 int32 UChooseNextWaypoint::SetWaypoint(UBlackboardComponent* BlackboardComponent)
