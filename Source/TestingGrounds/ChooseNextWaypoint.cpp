@@ -2,8 +2,8 @@
 
 #include "ChooseNextWaypoint.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "TP_ThirdPerson/PatrollingGuard.h"
 #include "AIController.h"
+#include "PatrolRouteComponent.h"
 
 EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
@@ -17,17 +17,15 @@ EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent& Own
 	return EBTNodeResult::Succeeded;
 }
 
-void UChooseNextWaypoint::SetNextWaypointIndex(const int32 &CurrentIndex, UBlackboardComponent * BlackboardComponent)
-{
-	auto NextIndex = (CurrentIndex + 1) % PatrolPoints.Num();
-	BlackboardComponent->SetValueAsInt(IndexKey.SelectedKeyName, NextIndex);
-}
-
 void UChooseNextWaypoint::GetPatrolPoints(UBehaviorTreeComponent & OwnerComp)
 {
-	auto Owner = OwnerComp.GetAIOwner();
-	auto AI = Cast<APatrollingGuard>(Owner->GetPawn());
-	PatrolPoints = AI->PatrolPoints;
+	auto AIController = OwnerComp.GetAIOwner();
+	auto ControlledCharacter = AIController->GetPawn();
+	auto PatrolRouteComponent = ControlledCharacter->FindComponentByClass<UPatrolRouteComponent>();
+
+	if (!ensure(PatrolRouteComponent)) { return; }
+
+	PatrolPoints = PatrolRouteComponent->PatrolPoints;
 }
 
 int32 UChooseNextWaypoint::SetWaypoint(UBlackboardComponent* BlackboardComponent)
@@ -36,4 +34,10 @@ int32 UChooseNextWaypoint::SetWaypoint(UBlackboardComponent* BlackboardComponent
 	auto Waypoint = PatrolPoints[CurrentIndex];
 	BlackboardComponent->SetValueAsObject(WaypointKey.SelectedKeyName, Waypoint);
 	return CurrentIndex;
+}
+
+void UChooseNextWaypoint::SetNextWaypointIndex(const int32 &CurrentIndex, UBlackboardComponent * BlackboardComponent)
+{
+	auto NextIndex = (CurrentIndex + 1) % PatrolPoints.Num();
+	BlackboardComponent->SetValueAsInt(IndexKey.SelectedKeyName, NextIndex);
 }
