@@ -22,11 +22,4 @@ protected:
 	struct FBlackboardKeySelector WaypointKey;
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-	void SetNextWaypointIndex(const int32 &CurrentIndex, UBlackboardComponent * BlackboardComponent);
-private:
-	TArray<AActor*> PatrolPoints = TArray<AActor*>();
-
-	void GetPatrolPoints(UBehaviorTreeComponent & OwnerComp);
-
-	int32 SetWaypoint(UBlackboardComponent * BlackboardComponent);
 };
