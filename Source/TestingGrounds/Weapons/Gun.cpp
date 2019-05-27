@@ -27,10 +27,10 @@ AGun::AGun()
 void AGun::OnFire()
 {
 	// try and fire a projectile
-	if (ProjectileClass != NULL)
+	if (ProjectileClass != nullptr)
 	{
 		UWorld* const World = GetWorld();
-		if (World != NULL)
+		if (World != nullptr)
 		{
 
 			const FRotator SpawnRotation = FP_MuzzleLocation->GetComponentRotation();
@@ -47,10 +47,16 @@ void AGun::OnFire()
 	}
 
 	// try and play the sound if specified
-	if (FireSound != NULL)
+	if (FireSound != nullptr)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-		//MakeNoise(1.0f, this, GetActorLocation());
+		if (ControllingPawn == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Controlling Pawn not set on gun"))
+			return;
+		}
+
+		MakeNoise(1.0f, ControllingPawn, GetActorLocation());
 	}
 
 	// try and play a firing animation if specified
